@@ -28,9 +28,42 @@ let data = [
     },
 ]
 
+let alert = {}
+
 app.use(express.urlencoded())
 
-app.set("view engine",  "ejs")
+app.set("view engine",  "ejs");
+
+
+const middleware = (req, res, next) => {
+    // console.log("hellow")
+    console.log(req.body)
+    if(req.body.password != '')
+        {
+         next()
+        }
+        else{
+           alert.message = "password did not added...!"
+           res.redirect("/")
+        }
+    
+}
+
+app.post("/updateData", (req, res)=>{
+        console.log(req.body)
+
+        data = data.map((ele) => {
+            if(ele.id == req.body.id)
+            {
+                ele.name = req.body.name,
+                ele.email = req.body.email,
+                ele.password = req.body.password
+            }
+            return ele;
+        })
+        return res.redirect("/")
+})
+
 
 app.get("/edit", (req, res)=>{
     let user = data.find((ele) => ele.id == req.query.id )
@@ -49,7 +82,7 @@ app.get("/delete", (req, res) =>{
         res.redirect('/')
 })
 
-app.post('/insert', (req, res)=>{
+app.post('/insert', middleware, (req, res)=>{
     data.push(req.body)
     res.redirect('/')
 })
@@ -57,10 +90,13 @@ app.post('/insert', (req, res)=>{
 
 app.get('/', (req, res)=>{
     res.render("form", {
-        students : data
+        students : data,
+        alert: alert
     })    
 })    
 
+
+app.use(middleware)
 
 
 app.listen(port, (err)=>{
