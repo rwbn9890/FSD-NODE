@@ -14,6 +14,14 @@ const adminSchema = mongoose.Schema({
         type:Number,
         required:true
     },
+    gender:{
+        type:String,
+        required:true
+    },
+    skills:{
+        type:Array,
+        required:true
+    },
     password:{
         type:String,
         required:true

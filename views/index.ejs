@@ -9,28 +9,54 @@
 </head>
 <body>
     <form action="/insertData" method="POST">
-        <table border width="400px" align="center">
+        <table style="width:400px" align="center"  class="table table-bordered">
             <tr>
+                <input type="text" hidden name="id" value="<%= editData.id %>">
                 <th>name</th>
-                <td><input name="name" type="text"></td>
+                <td><input name="name" type="text" value="<%=editData.name %>"></td>
             </tr>
             <tr>
                 <th>email</th>
-                <td><input name="email" type="text"></td>
+                <td><input name="email" type="text" value="<%=editData.email %>"></td>
             </tr>
             <tr>
                 <th>phone</th>
-                <td><input name="phone" type="number"></td>
+                <td><input name="phone" type="number" value="<%=editData.phone %>"></td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>
+                    <input name="gender" type="radio" <% if(editData.gender == "male"){ %> checked <% } %> value="male" />
+                    <label>Male</label>
+                    <input name="gender" type="radio" <% if(editData.gender == "female"){ %> checked <% } %> value="female" />
+                    <label>female</label>
+                    <input name="gender" type="radio" <% if(editData.gender == "other"){ %> checked <% } %> value="other" />
+                    <label>Other</label>
+                </td>
+            </tr>
+            <tr>
+                <th>Skills</th>
+                <td>
+                    <% ["html", "css", "javascript", "React", "Node", "Typescript"].map((el)=>{ %>
+                        <input name="skills"  type="checkbox" value="<%= el %>" />
+                        <label><%= el %></label>
+                        <%})%>
+                </td>
             </tr>
             <tr>
                 <th>password</th>
-                <td><input name="password" type="text"></td>
+                <td><input name="password" type="text" value="<%=editData.password %>"></td>
             </tr>
             <tr>
                 <th colspan="2">
-                    <button>Submit</button>
+                    <button>
+                        <% if(editData.id){ %>
+                            Edit
+                        <% } else { %>
+                            Submit
+                        <% } %>
+                    </button>
                 </th>
-                
             </tr>
         </table>
     </form>
@@ -42,6 +68,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Gender</th>
                 <th>Password</th>
                 <th>Delete</th>
             </tr>
@@ -50,8 +77,12 @@
                     <td><%= ele.name %></td>
                     <td><%= ele.email %></td>
                     <td><%= ele.phone %></td>
+                    <td><%= ele.gender %></td>
+                    <td><% ele.skills.map((sk)=>{ %> <%= sk %> <%}) %></td>
                     <td><%= ele.password %></td>
                     <td>
+                        <a class="btn btn-sm rounded-circle btn-outline-secondary" href="/edit?id=<%= ele.id %>"><i class="bi bi-pencil"></i></a>
+
                         <!-- <a class="btn btn-sm rounded-circle btn-outline-secondary" href="/delete?id=<%= ele.id %>"><i class="bi bi-trash"></i></a> -->
                         <a class="btn btn-sm rounded-circle btn-outline-secondary" href="/delete/<%= ele.id %>"><i class="bi bi-trash"></i></a>
                     </td>
