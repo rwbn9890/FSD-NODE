@@ -1,8 +1,7 @@
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 const adminSchema = mongoose.Schema({
-    name:{
+      name:{
         type:String,
         required:true
     },
@@ -14,20 +13,13 @@ const adminSchema = mongoose.Schema({
         type:Number,
         required:true
     },
-    gender:{
-        type:String,
-        required:true
-    },
-    skills:{
-        type:Array,
-        required:true
-    },
     password:{
         type:String,
         required:true
     },
 })
 
-const adminTbl = mongoose.model("admin", adminSchema)
+const adminTbl = mongoose.model("admin", adminSchema);
 
 module.exports = adminTbl
+
