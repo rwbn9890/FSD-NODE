@@ -9,7 +9,7 @@
 </head>
 <body>
 
-     <form action="/insertData" method="POST">
+     <form action="/insertData" method="POST" enctype="multipart/form-data" >
         <table style="width:400px" align="center"  class="table table-bordered">
             <tr>
                 <th>name</th>
@@ -28,6 +28,10 @@
                 <td><input name="password" type="text" ></td>
             </tr>
             <tr>
+                <th>Image</th>
+                <td><input name="image" type="file" ></td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <button class="btn btn-success btn-sm">Submit</button>
                 </td>
@@ -43,6 +47,7 @@
      <div class="container my-5">
         <table class="table">
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
@@ -51,6 +56,7 @@
             </tr>
             <%  data.map((ele)=>{ %>
                 <tr>
+                    <td> <img width="100px" src="<%= ele.image %>" /></td>
                     <td><%= ele.name %></td>
                     <td><%= ele.email %></td>
                     <td><%= ele.phone %></td>

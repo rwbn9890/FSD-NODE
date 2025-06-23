@@ -9,7 +9,7 @@
 </head>
 <body>
 
-     <form action="/editData" method="POST">
+     <form action="/editData" method="POST" enctype="multipart/form-data">
         <table style="width:400px" align="center"  class="table table-bordered">
             <input name="id" value="<%= data.id %>" hidden type="text" >
             <tr>
@@ -24,9 +24,17 @@
                 <th>phone</th>
                 <td><input name="phone" value="<%= data.phone %>" type="number" ></td>
             </tr>
+        
             <tr>
                 <th>password</th>
                 <td><input name="password" value="<%= data.password %>" type="text" ></td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                 <td> 
+                    <img width="100px" src="<%= data.image %>" />
+                    <input name="image" value="<%= data.password %>" type="file" >
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
