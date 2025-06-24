@@ -1,17 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
-    mongoose.connect("mongodb://localhost:27017/multer")
+     mongoose.connect("mongodb://localhost:27017/routes")
 
-    let db = mongoose.connection
+     const db = mongoose.connection;
 
-    db.on("connected", (err)=>{
-         if(err)
-    {
+     db.on("connected", (err)=>{
+        if(err){
         console.log(err)
-        return false
+        return false;
     }
     console.log("db is connected")
-    })
+     })
 
-
-    module.exports = db
+     module.exports = db
