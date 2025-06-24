@@ -34,8 +34,6 @@ const images = multer({storage:newImage}).single("image")
 app.post("/editData", images, (req, res)=>{
     const {id, name, email, phone, password} = req.body;
 
- 
-
     // console.log(req.file)
 
     if(req.file)
