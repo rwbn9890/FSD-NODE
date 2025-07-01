@@ -1,8 +1,43 @@
 const adminTbl = require("../models/adminTbl")
 
- const home = (req, res) => {
-    return res.render("home")
+
+
+const login = (req, res) => {
+    return res.render("login")
 }
+
+
+const signIn = async (req, res) => {
+
+    let currentUser = await adminTbl.findOne({email:req.body.email})
+    if(currentUser){
+        if(currentUser.password == req.body.password)
+        {
+            res.cookie("admin", currentUser)
+            return res.redirect("/dashboard")
+        }else{
+            console.log("invalide Password")
+            return res.redirect("/")
+        }
+    }else{
+        console.log("invalide Email")
+        return res.redirect("/")
+    }
+}
+
+const logout = (req, res) => {
+     res.clearCookie("admin");
+    return res.redirect("/")
+}
+
+
+
+
+ const home = async (req, res) => {
+            return res.render("home", {
+                admin:req.currentUser
+            })
+}    
 
 
 
@@ -11,6 +46,7 @@ const adminTbl = require("../models/adminTbl")
        let data = await adminTbl.find()
        return res.render("admin_table", {
         data,
+        admin:req.currentUser
        })
     } catch (error) {
         console.log(err)
@@ -20,13 +56,13 @@ const adminTbl = require("../models/adminTbl")
 
 
 
-
-
  const adminForm = (req, res) => {
-    return res.render("admin_form")
+
+    console.log(req.cookies)
+    return res.render("admin_form",{
+                admin:req.currentUser
+    })
 }
-
-
 
 
 
@@ -117,4 +153,4 @@ const adminTbl = require("../models/adminTbl")
     return res.json(response)
 }
 
-module.exports = {home, adminTable, adminForm, insertAdmin, editAdmin, updateAdmin, error, allUsers}
+module.exports = {login, signIn,logout, home, adminTable, adminForm, insertAdmin, editAdmin, updateAdmin, error, allUsers }

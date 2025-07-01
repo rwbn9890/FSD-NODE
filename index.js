@@ -1,18 +1,19 @@
 const express = require("express")
 const path = require("path")
 const db = require("./config/db")
+const cookieParser = require("cookie-parser")
 
 
 const port = 4400;
 
 const app = express();
 
-
-
 app.set("view engine", "ejs")
 
-app.use(express.urlencoded())
 
+app.use(express.urlencoded({ extended: true }))
+
+app.use(cookieParser())
 
 
 app.use("/", express.static(path.join(__dirname, "/public")))

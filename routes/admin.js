@@ -2,9 +2,7 @@ const express = require("express");
 
 const routes = express.Router();
 const multer = require("multer")
-const path = require("path")
-
-
+const path = require("path");
 const adminTbl = require("../models/adminTbl")
 
 routes.use(express.urlencoded())
@@ -24,14 +22,21 @@ let uploadAvatar = multer.diskStorage({
 
 
 const adminController = require("../controllers/adminController")
+const auth = require("../middleware/auth")
 
-routes.get("/", adminController.home)
+routes.get("/", adminController.login)
 
-routes.get("/users", adminController.allUsers)
+routes.post("/login", adminController.signIn)
 
-routes.get("/admin_table", adminController.adminTable)
+routes.get("/logout", adminController.logout)
 
-routes.get("/admin_form", adminController.adminForm)
+routes.get("/dashboard",auth, adminController.home)
+
+routes.get("/users",auth, adminController.allUsers)
+
+routes.get("/admin_table",auth, adminController.adminTable)
+
+routes.get("/admin_form",auth, adminController.adminForm)
 
 routes.post("/insertAdmin", avatarImage, adminController.insertAdmin)
 
