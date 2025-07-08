@@ -1,13 +1,15 @@
 const adminTbl = require("../models/adminTbl")
 
 const auth = async (req, res, next) => {
- let cookie = req.cookies;
-    if(cookie.admin)
-    {
-        let currentUser = await adminTbl.findOne({email:cookie.admin.email})
-        if(currentUser)
+
+ const user = req.session.user
+
+    if(user)
+    {  
+        user = await adminTbl.findById(user.id)
+        if(user)
         {
-             req.currentUser = currentUser
+             req.currentUser = user
             return next()
         }else{
             return res.redirect("/")

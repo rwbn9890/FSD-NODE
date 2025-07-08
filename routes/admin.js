@@ -42,8 +42,24 @@ routes.post("/insertAdmin", avatarImage, adminController.insertAdmin)
 
 routes.get("/edit_admin", adminController.editAdmin)
 
+routes.get("/viewProfile", adminController.viewProfile)
+
 routes.post("/updateAdmin/:id",avatarImage, adminController.updateAdmin)
 
 routes.get("/404", adminController.error)
+
+routes.get("/changePassword", auth, adminController.changePassword)
+
+routes.post("/passwordChanged", adminController.passwordChanged)
+
+routes.post("/verifyEmail", adminController.verifyEmail)
+
+routes.get("/verifyOtpPage", adminController.verifyOtpPage)
+
+routes.post("/verifyOtp", adminController.verifyOtp)
+
+routes.get("/resetPassword", adminController.resetPasswordPage)
+
+routes.post("/resetPassword", adminController.resetPassword)
 
 module.exports = routes
