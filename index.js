@@ -3,8 +3,11 @@ const path = require("path")
 const db = require("./config/db")
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
+    require('dotenv').config();
+const passport = require("passport")
+const localst = require("./middleware/pls")
 
-const port = 4400;
+const port = process.env.PORT;
 
 const app = express();
 
@@ -17,16 +20,23 @@ app.use(cookieParser())
 app.use("/", express.static(path.join(__dirname, "/public")))
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
 
+
 app.use(session({
-    name:"adminKey",
-    secret:"adming-secrete-key",
-    resave: true,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000*60*60 }
+    name:"admin",
+    secret:process.env.SECRET,
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        maxAge:1000*60*60
+    }
 }))
 
-app.use("/", require("./routes/admin"))
 
+app.use(passport.session())
+app.use(passport.initialize())
+app.use(passport.userAuth)
+
+app.use("/", require("./routes/admin"))
 
 app.listen(port, (err) => {
     if(err){

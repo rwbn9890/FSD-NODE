@@ -4,7 +4,7 @@ const routes = express.Router();
 const multer = require("multer")
 const path = require("path");
 const adminTbl = require("../models/adminTbl")
-
+const passport = require("passport")
 routes.use(express.urlencoded())
 
 
@@ -22,21 +22,21 @@ let uploadAvatar = multer.diskStorage({
 
 
 const adminController = require("../controllers/adminController")
-const auth = require("../middleware/auth")
+
 
 routes.get("/", adminController.login)
 
-routes.post("/login", adminController.signIn)
+routes.post("/login", passport.authenticate("local", {failureRedirect:'/'}),   adminController.signIn)
 
 routes.get("/logout", adminController.logout)
 
-routes.get("/dashboard",auth, adminController.home)
+routes.get("/dashboard",passport.isAuth, adminController.home)
 
-routes.get("/users",auth, adminController.allUsers)
+routes.get("/users",passport.isAuth, adminController.allUsers)
 
-routes.get("/admin_table",auth, adminController.adminTable)
+routes.get("/admin_table",passport.isAuth, adminController.adminTable)
 
-routes.get("/admin_form",auth, adminController.adminForm)
+routes.get("/admin_form",passport.isAuth, adminController.adminForm)
 
 routes.post("/insertAdmin", avatarImage, adminController.insertAdmin)
 
@@ -48,7 +48,7 @@ routes.post("/updateAdmin/:id",avatarImage, adminController.updateAdmin)
 
 routes.get("/404", adminController.error)
 
-routes.get("/changePassword", auth, adminController.changePassword)
+routes.get("/changePassword", passport.isAuth, adminController.changePassword)
 
 routes.post("/passwordChanged", adminController.passwordChanged)
 

@@ -9,34 +9,23 @@ const login = (req, res) => {
 
 
 const signIn = async (req, res) => {
-    let currentUser = await adminTbl.findOne({email:req.body.email})
-    if(currentUser){
-        if(currentUser.password == req.body.password)
-        {
-            // res.cookie("admin", currentUser)
-            req.session.user = currentUser;
             return res.redirect("/dashboard")
-        }else{
-            console.log("invalide Password")
-            return res.redirect("/")
-        }
-    }else{
-        console.log("invalide Email")
-        return res.redirect("/")
-    }
 }
 
 const logout = (req, res) => {
-     res.clearCookie("admin");
-    return res.redirect("/")
+     req.session.destroy(function(err){
+        if(err){
+            console.log(err)
+          return  res.redirect("/dashboard")
+        }
+        return res.redirect("/")
+     })
 }
 
 
 
  const home = async (req, res) => {
-            return res.render("home", {
-                admin:req.currentUser
-            })
+            return res.render("home")
 }    
 
 
@@ -45,7 +34,6 @@ const logout = (req, res) => {
        let data = await adminTbl.find()
        return res.render("admin_table", {
         data,
-        admin:req.currentUser
        })
     } catch (error) {
         console.log(err)
@@ -56,10 +44,7 @@ const logout = (req, res) => {
 
 
  const adminForm = (req, res) => {
-    console.log(req.cookies)
-    return res.render("admin_form",{
-                admin:req.currentUser
-    })
+    return res.render("admin_form")
 }
 
 
@@ -156,9 +141,7 @@ const logout = (req, res) => {
 
 
  const changePassword =  (req, res) => {
-    return res.render("changePassword", {
-        admin:req.currentUser
-    })
+    return res.render("changePassword")
 }
 
 
