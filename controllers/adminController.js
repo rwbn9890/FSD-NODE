@@ -4,7 +4,14 @@ const nodemailer = require("nodemailer");
 
 
 const login = (req, res) => {
-    return res.render("login")
+  
+    console.log(req.user)
+    if(req.user){
+        return res.redirect("/dashboard")
+    }else{
+        return res.render("login")
+    }
+    
 }
 
 
@@ -25,6 +32,8 @@ const logout = (req, res) => {
 
 
  const home = async (req, res) => {
+
+    req.flash("done","Login successfull...!")
             return res.render("home")
 }    
 
@@ -147,14 +156,18 @@ const logout = (req, res) => {
 
  const passwordChanged = async (req, res) => {
     console.log(req.body)
+    console.log(req.user)
+    console.log(req.user.id)
 
-    if(req.body.oldpass == req.session.user.password){
+  
+
+    if(req.body.oldpass == req.user.password){
         if(req.body.newpass == req.body.confirmpass){
 
-         let curData = await adminTbl.findByIdAndUpdate(req.session.admin._id, {password:req.body.confirmpass})
+         let curData = await adminTbl.findByIdAndUpdate(req.user.id, {password:req.body.confirmpass})
          console.log(curData)
          if(curData){
-            res.cookie("admin", curData)
+            // res.cookie("admin", curData)
             return res.redirect("/dashboard")
          }else{
             return res.redirect("/changePassword")
@@ -191,7 +204,7 @@ const verifyEmail = async (req, res) => {
                         user: "rwbn1.alishan.as@gmail.com",
                         pass: "acrrpsbukjktudlo",
                     },
-                    });
+                });
 
                     const info = await transporter.sendMail({
                         from: '"Admin Panel" <rwbn1.alishan.as@gmail.com>',
@@ -202,8 +215,9 @@ const verifyEmail = async (req, res) => {
                     });
                     if(info){
                         console.log("Email Sent")
-                        res.cookie("otp", otp)
-                        res.cookie("email", req.body.email)
+                        // res.cookie("otp", otp)
+                        // res.cookie("email", req.body.email)
+                        req.session.v_otp = {otp, email:req.body.email}
                        return res.redirect("/verifyOtpPage")
                     }else{
                         return res.redirect("/")
@@ -229,7 +243,7 @@ const verifyOtpPage = (req, res) => {
 const verifyOtp =async (req, res) => {
     try {
         if(req.body.otp){
-            if(req.cookies.otp == req.body.otp){
+            if(req.session.v_otp.otp == req.body.otp){
                 return res.redirect("/resetPassword")
             }else{
                 console.log("otp did not match");
@@ -252,7 +266,7 @@ const resetPassword = async (req, res)=>{
    if(req.body.newPassword && req.body.confirmPassword){
         if(req.body.newPassword == req.body.confirmPassword){
             try {
-                let curUser = await adminTbl.findOne({email:req.cookies.email})
+                let curUser = await adminTbl.findOne({email:req.session.v_otp.email})
                 if(curUser){
                    let changedUser = await adminTbl.findByIdAndUpdate(curUser.id, {password:req.body.confirmPassword})
                    if( changedUser){

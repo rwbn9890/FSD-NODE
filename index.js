@@ -7,6 +7,8 @@ const session = require("express-session")
 const passport = require("passport")
 const localst = require("./middleware/pls")
 
+var flash = require('connect-flash');
+
 const port = process.env.PORT;
 
 const app = express();
@@ -16,6 +18,8 @@ app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 
 app.use(cookieParser())
+
+
 
 app.use("/", express.static(path.join(__dirname, "/public")))
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
@@ -35,7 +39,7 @@ app.use(session({
 app.use(passport.session())
 app.use(passport.initialize())
 app.use(passport.userAuth)
-
+app.use(flash())
 app.use("/", require("./routes/admin"))
 
 app.listen(port, (err) => {
